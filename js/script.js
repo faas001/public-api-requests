@@ -52,6 +52,7 @@ $.ajax({
 displayGallery();
 
 $galleryDiv.click( (e) => {
+ 
    console.log(e.target.className);
     if (e.target.className !== "gallery") { 
         if (e.target.className === 'card') {
@@ -77,8 +78,7 @@ $galleryDiv.click( (e) => {
 
     console.log(employees);
     formatDob = new Date(employees[empIndex].dob.date);
-    //formatDob = formatDob.toLocaleDateString('en-US');
-    console.log(formatDob.toLocaleDateString('en-US'));
+     
     let modalHTML = `
             <div class="modal">
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
@@ -94,9 +94,10 @@ $galleryDiv.click( (e) => {
             </div>
         </div>
 
-    `  // end template literal for modal window
-
-    $('body').append(modalHTML)
-
+    `;  // end template literal for modal window
+      
+    $('body').append(modalHTML);
+  
+    
 
 });
