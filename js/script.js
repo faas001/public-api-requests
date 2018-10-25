@@ -2,6 +2,7 @@ const $galleryDiv = $('#gallery');
 let employees = [];
 let results = [];
 
+// creates HTML message and displays the employee information 
 function displayEmployees(empData) {
     console.log('display');
     console.log(empData);
@@ -20,6 +21,7 @@ function displayEmployees(empData) {
       });  
 }
 
+// Create the modal HTML elements and append the first clicked employee to body
 function displayModal(empData, empIndex) {
     let formatDob = new Date(empData[empIndex].dob.date);
     
@@ -48,7 +50,7 @@ function displayModal(empData, empIndex) {
         $('body').append(modalHTML);
 }
 
-//use Jquery ajax function to request data from the randomuser API
+//use Jquery ajax function to request data from the randomuser API and store the results to use as seed data
 function getEmpData() { 
 $.ajax({
     url: 'https://randomuser.me/api/?results=12&nat=US,GB,CA,AU,NZ,IE',
@@ -64,7 +66,7 @@ $.ajax({
 getEmpData();
 
 
-
+// search employee, currently only searching the first name, going to develop this some more to include first and last and/or partial matches.
 function displaySearch(event) {
     console.log($('#search-input').val());
     results = employees.filter( (emp) => {
@@ -80,6 +82,7 @@ function displaySearch(event) {
     }
 }
 
+//create the Search HTML elements
 let searchDiv = `<form action="#" method="get">
                     <input type="search" id="search-input" class="search-input" placeholder="Search...">
                     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
@@ -87,11 +90,13 @@ let searchDiv = `<form action="#" method="get">
 
 $('body').append(searchDiv);
 
+//display the search results on submit
 $('#search-submit').click( (e) => {
     e.preventDefault();
     displaySearch(e);
 });
 
+// display the approriate employee based on employee data and index passed
 function navModal(empData, empIndex) {
     console.log('navigate', empIndex);
     let formatDob = new Date(empData[empIndex].dob.date);
@@ -113,7 +118,7 @@ $galleryDiv.click( (e) => {
     let empIndex = 0;
    console.log(results.length);
    //the below if else statement checks back and forth for the element clicked to determine which card was selected
-   //I may refactor this to filter by actual name info instead of relative index location after I implement the search function and see how the below works.
+   //May need to revisit this afterwards to see what better ways I could have accomplished this but this seems to work so far.
    if(results.length === 0) { 
    if (e.target.className !== "gallery") { 
         if (e.target.className === 'card') {
@@ -136,12 +141,12 @@ $galleryDiv.click( (e) => {
               console.log('card clicked ' + empIndex);
          
     }
-} else {
-    displayModal(results, empIndex);
+    } else {
+        displayModal(results, empIndex);
 }
     console.log(employees);
     
-//!!!!!!!!!!!!!!!  need to look at the results if statement to be able to navigate without error in console
+    // Navigate to the next employee and display in the modal, if the last employee is already reached then nothing happens.
     $('#modal-next').click( (e) => {
         if(results.length === 0 && empIndex !== 11) { 
             navModal(employees, empIndex + 1);
@@ -153,6 +158,7 @@ $galleryDiv.click( (e) => {
         }
      });
    
+     // Navigate to the previous employee and display in the modal, if the first employee is already reached then nothing happens.
      $('#modal-prev').click( (e) => {
         if(results.length === 0 && empIndex !== 0) { 
             navModal(employees, empIndex - 1);
@@ -163,13 +169,14 @@ $galleryDiv.click( (e) => {
         }
      });
    
-
+    //close the modal if user clicks darkend area of screen
     $('.modal-container').click( (e) => {
         if (e.target.className === 'modal-container') {
         $('.modal-container').remove();
       }
     });
 
+    //close the modal if user clicks the X button
     $('#modal-close-btn').click( (e) => {
         $('.modal-container').remove();
      });
