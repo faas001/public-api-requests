@@ -1,6 +1,8 @@
 # public-api-requests
 
-Demo at 
+Work in progress - search function currently matchs complete first name only.
+
+Demo at https://faas001.github.io/public-api-requests/
 
 Public api request created as part of Fullstack JavaScript Treehouse Techdegree program.
 
