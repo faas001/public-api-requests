@@ -1,4 +1,5 @@
 const $galleryDiv = $('#gallery');
+const $empDirHeader = $('.header-text-container');
 let employees = [];
 let results = [];
 
@@ -70,20 +71,19 @@ function displaySearch(event) {
     
     results = employees.filter( (emp) => {
         let $eval = $('#search-input').val().toLowerCase();
-        let regex = '/[a-z]/ig';
         let fullName = emp.name.first + emp.name.last;
-        //console.log(fullName.search($eval));
-       if (fullName.indexOf($eval) > - 1) {
+       
+        if (fullName.indexOf($eval) > - 1) {
            return true;
-       }
-      // return emp.name.first.toLowerCase() === $('#search-input').val().toLowerCase();
+        }
     });
     
     if (results.length > 0) {
         $galleryDiv.html('');
         displayEmployees(results);
 
-    } else {$galleryDiv.html('');
+    } else {
+         $galleryDiv.html('');
          displayEmployees(employees);
     }
 }
@@ -123,46 +123,34 @@ function navModal(empData, empIndex) {
 //listen for click on employee card and pop up selected user into modal window
 $galleryDiv.click( (e) => {
     let empIndex = 0;
-  
+   
    //the below if else statement checks back and forth for the element clicked to determine which card was selected
    //May need to revisit this afterwards to see what better ways I could have accomplished this but this seems to work so far.
-   if(results.length === 0) { 
-   if (e.target.className !== "gallery") { 
-        if (e.target.className === 'card') {
-            empIndex = $(e.target).index();
-            displayModal(employees, empIndex);
-        } else if (e.target.className === 'card-img-container' || 'card-info-container' ) {
-            if (e.target.className === 'card-info-container') {
-            empIndex = $(e.target).parent().index();
-            displayModal(employees, empIndex);
-            } else if (e.target.className === 'card-img-container') { 
-                empIndex = $(e.target).parent().index();
-                displayModal(employees, empIndex);
-            } else {
-                empIndex = $(e.target).parent().parent().index();
-                displayModal(employees, empIndex);
-            }
-        } 
-    }
-    } else {
+    function eleClicked(empData) {
         if (e.target.className !== "gallery") { 
             if (e.target.className === 'card') {
                 empIndex = $(e.target).index();
-                displayModal(results, empIndex);
+                displayModal(empData, empIndex);
             } else if (e.target.className === 'card-img-container' || 'card-info-container' ) {
                 if (e.target.className === 'card-info-container') {
                 empIndex = $(e.target).parent().index();
-                displayModal(results, empIndex);
+                displayModal(empData, empIndex);
                 } else if (e.target.className === 'card-img-container') { 
                     empIndex = $(e.target).parent().index();
-                    displayModal(results, empIndex);
+                    displayModal(empData, empIndex);
                 } else {
                     empIndex = $(e.target).parent().parent().index();
-                    displayModal(results, empIndex);
+                    displayModal(empData, empIndex);
                 }
             } 
         }
-        //displayModal(results, empIndex);
+    }
+
+    //determine if there was a search or not
+   if(results.length === 0) { 
+        eleClicked(employees);
+    } else {
+        eleClicked(results);
     } 
         
     // Navigate to the next employee and display in the modal, if the last employee is already reached then nothing happens.
@@ -198,6 +186,13 @@ $galleryDiv.click( (e) => {
     //close the modal if user clicks the X button
     $('#modal-close-btn').click( (e) => {
         $('.modal-container').remove();
+     });
+
+     //reload complete employee directory (to return from a filtered search result). Need to add visual clues to feature.
+     $empDirHeader.click( () => {
+        $galleryDiv.html('');
+        displayEmployees(employees);
+
      });
    
 });
