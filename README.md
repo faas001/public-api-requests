@@ -1,6 +1,6 @@
 # public-api-requests
 
-Work in progress - search function currently matchs complete first name only.
+Work in progress - Functionaly complete (pending more testing.) Still may add some UX mods for useability
 
 Demo at https://faas001.github.io/public-api-requests/
 
