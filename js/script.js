@@ -4,8 +4,7 @@ let results = [];
 
 // creates HTML message and displays the employee information 
 function displayEmployees(empData) {
-    console.log('display');
-    console.log(empData);
+    
     let galHtml = '';
       $.each(empData, (i, employee) => {
           
@@ -56,7 +55,7 @@ $.ajax({
     url: 'https://randomuser.me/api/?results=12&nat=US,GB,CA,AU,NZ,IE',
     dataType: 'json',
     success: function(data) {
-      console.log(data);
+      
       employees = data.results;  
       displayEmployees(employees);
     }
@@ -68,11 +67,18 @@ getEmpData();
 
 // search employee, currently only searching the first name, going to develop this some more to include first and last and/or partial matches.
 function displaySearch(event) {
-    console.log($('#search-input').val());
+    
     results = employees.filter( (emp) => {
-        return emp.name.first.toLowerCase() === $('#search-input').val().toLowerCase();
+        let $eval = $('#search-input').val().toLowerCase();
+        let regex = '/[a-z]/ig';
+        let fullName = emp.name.first + emp.name.last;
+        //console.log(fullName.search($eval));
+       if (fullName.indexOf($eval) > - 1) {
+           return true;
+       }
+      // return emp.name.first.toLowerCase() === $('#search-input').val().toLowerCase();
     });
-    console.log(results);
+    
     if (results.length > 0) {
         $galleryDiv.html('');
         displayEmployees(results);
@@ -96,9 +102,10 @@ $('#search-submit').click( (e) => {
     displaySearch(e);
 });
 
+
 // display the approriate employee based on employee data and index passed
 function navModal(empData, empIndex) {
-    console.log('navigate', empIndex);
+   
     let formatDob = new Date(empData[empIndex].dob.date);
       //  $('.modal-info-container').html('');
         $('.modal-info-container').html(`
@@ -116,17 +123,15 @@ function navModal(empData, empIndex) {
 //listen for click on employee card and pop up selected user into modal window
 $galleryDiv.click( (e) => {
     let empIndex = 0;
-   console.log(results.length);
+  
    //the below if else statement checks back and forth for the element clicked to determine which card was selected
    //May need to revisit this afterwards to see what better ways I could have accomplished this but this seems to work so far.
    if(results.length === 0) { 
    if (e.target.className !== "gallery") { 
         if (e.target.className === 'card') {
-            console.log('card');
             empIndex = $(e.target).index();
             displayModal(employees, empIndex);
         } else if (e.target.className === 'card-img-container' || 'card-info-container' ) {
-            console.log('card info / image');
             if (e.target.className === 'card-info-container') {
             empIndex = $(e.target).parent().index();
             displayModal(employees, empIndex);
@@ -138,14 +143,28 @@ $galleryDiv.click( (e) => {
                 displayModal(employees, empIndex);
             }
         } 
-              console.log('card clicked ' + empIndex);
-         
     }
     } else {
-        displayModal(results, empIndex);
-}
-    console.log(employees);
-    
+        if (e.target.className !== "gallery") { 
+            if (e.target.className === 'card') {
+                empIndex = $(e.target).index();
+                displayModal(results, empIndex);
+            } else if (e.target.className === 'card-img-container' || 'card-info-container' ) {
+                if (e.target.className === 'card-info-container') {
+                empIndex = $(e.target).parent().index();
+                displayModal(results, empIndex);
+                } else if (e.target.className === 'card-img-container') { 
+                    empIndex = $(e.target).parent().index();
+                    displayModal(results, empIndex);
+                } else {
+                    empIndex = $(e.target).parent().parent().index();
+                    displayModal(results, empIndex);
+                }
+            } 
+        }
+        //displayModal(results, empIndex);
+    } 
+        
     // Navigate to the next employee and display in the modal, if the last employee is already reached then nothing happens.
     $('#modal-next').click( (e) => {
         if(results.length === 0 && empIndex !== 11) { 
@@ -156,7 +175,7 @@ $galleryDiv.click( (e) => {
             empIndex += 1;
         
         }
-     });
+    });
    
      // Navigate to the previous employee and display in the modal, if the first employee is already reached then nothing happens.
      $('#modal-prev').click( (e) => {
