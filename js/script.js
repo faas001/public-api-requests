@@ -77,15 +77,22 @@ function displaySearch(event) {
            return true;
         }
     });
-    
-    if (results.length > 0) {
-        $galleryDiv.html('');
-        displayEmployees(results);
+       
+    $galleryDiv.html('');
+    displayEmployees(results);
 
-    } else {
-         $galleryDiv.html('');
-         displayEmployees(employees);
-    }
+    //close the modal if user clicks darkend area of screen
+    $('.modal-container').click( (e) => {
+        if (e.target.className === 'modal-container') {
+        $('.modal-container').remove();
+      }
+    });
+
+    //close the modal if user clicks the X button
+    $('#modal-close-btn').click( (e) => {
+        $('.modal-container').remove();
+     
+     });
 }
 
 //create the Search HTML elements
@@ -96,11 +103,28 @@ let searchDiv = `<form action="#" method="get">
 
 $('body').append(searchDiv);
 
+let $searchInput = $('#search-input'); 
+
 //display the search results on submit
 $('#search-submit').click( (e) => {
     e.preventDefault();
     displaySearch(e);
 });
+
+$searchInput.keyup ( (e) => {
+
+    if ($searchInput.val() === '') {
+     $galleryDiv.html('');
+     results = [];
+     displayEmployees(employees);
+
+   } else {
+    
+    displaySearch(e);
+   }
+   
+});
+
 
 
 // display the approriate employee based on employee data and index passed
@@ -188,13 +212,6 @@ $galleryDiv.click( (e) => {
         $('.modal-container').remove();
      });
 
-     //reload complete employee directory (to return from a filtered search result). Need to add visual clues to feature.
-     $empDirHeader.click( () => {
-        $galleryDiv.html('');
-        displayEmployees(employees);
-
-     });
-   
 });
 
 

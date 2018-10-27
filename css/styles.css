@@ -207,6 +207,11 @@ header h1 {
     outline: none;
   }
   
+  .noresult-img {
+    width: 250px;
+    margin-top: 105px;
+    border-radius: 10%;
+}
 
 /* ===================================== 
    Media Queries
